@@ -18,22 +18,3 @@ Moreover, the routes is made for the APIs for the user registry and authenticati
 
 At the end, in the main.py app instance is made from the FastAPI and the routes are included i.e. 2 of them auth.router and book.router with the tags “Authentication” and “Books”. 
 
-These are the API Endpoints and the HTTP methods for the CRUD Operations:
-            CRUD operations:
-Create a Book (POST /books/)
-Adds a new book to the database (only accessible to authenticated users).
-Retrieve Books (GET /books/)
-Returns a list of all books stored in the database.
-Retrieve a Single Book (GET /books/{book_id})
-Fetches a book by its unique ID.
-Update a Book (PUT /books/{book_id})
-Updates book details (only by the logged-in user who created the book).
-Delete a Book (DELETE /books/{book_id})
-Removes a book from the database (only by the logged-in user who created the book).
-API Routing (api/auth.py and api/book.py)
-Authentication Routes (auth.py)
-Handles user registration (/register)
-Handles login and JWT token issuance (/token)
-Book Routes (book.py)
-Manages all CRUD operations on books.
-Ensures authentication is required for modification operations
