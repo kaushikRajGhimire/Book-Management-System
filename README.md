@@ -1,20 +1,121 @@
-CLONE THIS REPO AND use "uv sync" to setup all dependencies and make virtual environment. Now use "uvicorn app.main:app --reload" to run the project.
+# 📚 FastAPI Bookstore API
 
+## 🚀 Overview
+This is a **FastAPI-based Bookstore API** that allows users to register, authenticate using JWT tokens, and perform **CRUD operations** on books. The authentication and authorization mechanism ensures that only logged-in users can manipulate book data.
 
-First the user registers in the application using the “/register” endpoint.
-Here, he would enter his username,email and password. His credentials would be stored in the MongoDB database “user_collection” if he was not registered earlier along with his hashed password.
+---
 
-After that the “/token” endpoint is used to login to the application by taking the data like username,email from the the Form submitted and the data is taken directly using Depends(). If he is authenticated user from the JWT token then it returns the access_token and token_type:”bearer” as response.
+## 🛠️ Setup & Installation
 
-This JWT token was created from the auth.py file in the core. It has mainly 3 functions that is used to create_password using hashing, verify_password to verify the plain and hashed password and finally create_token using the SECRET KEY and ALGORITHM like HS256 from the .env file.
+### 1️⃣ Clone the Repository
+```sh
+git clone <your-repo-url>
+cd <your-repo-folder>
+```
 
-The database connection is made in the database.py file where the connection is made with the MongoDB so that it can store both the users data and the books data using the users_collection and books_collection.
+### 2️⃣ Install Dependencies & Create Virtual Environment
+This project uses `uv` for dependency management.
+```sh
+uv sync
+```
 
-The user.py and book.py is used to define the Data Validation using the pydantic model with the Field class so that we can impose constraints on the input of the user and EmailStr for the email validation.
+### 3️⃣ Run the Application
+```sh
+uvicorn app.main:app --reload
+```
 
-So now when the user is logged in we can allow him to do the CRUD operations on the books. However, we must test only the logged in user is allowed to do the CRUD. Also updating and deleting can only be done by the registered user who is currently logged.
+Now, the server should be running at `http://127.0.0.1:8000`
 
-Moreover, the routes is made for the APIs for the user registry and authentication using auth.py and the books CRUD operations using book.py in api.
+---
 
-At the end, in the main.py app instance is made from the FastAPI and the routes are included i.e. 2 of them auth.router and book.router with the tags “Authentication” and “Books”. 
+## 🔑 Authentication & Authorization
+
+### 1️⃣ Register a User
+**Endpoint:** `POST /register`
+- Takes `username`, `email`, and `password`
+- Stores user credentials in **MongoDB (user_collection)**
+- Passwords are securely **hashed** before storage
+
+### 2️⃣ Login & Get JWT Token
+**Endpoint:** `POST /token`
+- Authenticates users using credentials provided in a **Form**
+- If authentication is successful, returns a JWT **access_token**
+
+### 🔐 JWT Token Generation
+- **Located in:** `core/auth.py`
+- **Functions:**
+  - `create_password()`: Hashes passwords securely
+  - `verify_password()`: Compares plain and hashed passwords
+  - `create_token()`: Generates a JWT token using **HS256** algorithm and a **SECRET_KEY** from `.env`
+
+---
+
+## 📦 Database (MongoDB)
+**Database Connection File:** `database.py`
+- **Collections Used:**
+  - `users_collection` → Stores registered users' data
+  - `books_collection` → Stores book records
+
+---
+
+## 📜 API Endpoints
+
+### 🏷️ Authentication (`auth.py`)
+| Method | Endpoint     | Description  |
+|--------|-------------|--------------|
+| POST   | `/register` | User Registration |
+| POST   | `/token`    | User Login & Get JWT Token |
+
+### 📚 Book CRUD Operations (`book.py`)
+| Method | Endpoint   | Description |
+|--------|-----------|-------------|
+| GET    | `/books`  | Get all books |
+| POST   | `/books`  | Add a new book (Requires Authentication) |
+| PUT    | `/books/{id}`  | Update a book (Only by the owner) |
+| DELETE | `/books/{id}`  | Delete a book (Only by the owner) |
+
+> **🔒 Access Control:** Only **logged-in users** can perform CRUD operations on books. Users can update or delete only **their own** book entries.
+
+---
+
+## 📌 Data Validation
+Data validation is handled using **Pydantic** models:
+- **`user.py` & `book.py`** define data validation using:
+  - `Field` → Enforces constraints on user input
+  - `EmailStr` → Ensures valid email format
+
+---
+
+## 📌 Project Structure
+```
+📂 app
+│── 📄 main.py        # FastAPI app instance & route inclusion
+│── 📂 core
+│   │── 📄 auth.py    # JWT authentication functions
+│── 📂 database
+│   │── 📄 database.py  # MongoDB connection
+│── 📂 models
+│   │── 📄 user.py   # User data validation
+│   │── 📄 book.py   # Book data validation
+│── 📂 api
+│   │── 📄 auth.py   # Authentication API endpoints
+│   │── 📄 book.py   # Book CRUD API endpoints
+│── .env             # Secret keys & configuration
+│── requirements.txt # Dependencies
+```
+
+---
+
+## 🎯 Future Enhancements
+- Add **Swagger UI** (`/docs`) and **Redoc UI** (`/redoc`)
+- Implement **role-based access control** for admin & users
+- Improve **error handling** for better API robustness
+
+---
+
+## 📝 License
+This project is licensed under the MIT License.
+
+💡 **Happy Coding! 🚀**
+
 
